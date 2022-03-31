@@ -5,6 +5,14 @@ import java.util.List;
 import member.model.dao.MemberDao;
 import member.model.vo.Member;
 
+/**
+ * controller 클래스
+ * 	- 신호등 역할
+ * 	- mvc 흐름에서 가장 중심이 되는 클래스
+ * 	- service 단에 업무요청
+ * @author jes
+ *
+ */
 public class MemberController {
 
 	private MemberDao memberDao = new MemberDao();

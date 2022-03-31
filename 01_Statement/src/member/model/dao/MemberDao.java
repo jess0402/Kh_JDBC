@@ -12,6 +12,21 @@ import java.util.List;
 
 import member.model.vo.Member;
 
+/**
+ * dao 클래스 
+ * 	- Database Access Object
+ * 	- db에 접근헤서 요청/응답 처리
+ * 
+ * 1. driver Class 등록
+ * 2. connection 생성
+ * 3. PreparedStatement 생성
+ * 4. 쿼리 실행
+ * 5. ResultSet 처리 / 트랜잭션 처리
+ * 6. 자원반납
+ * @author jes
+ *
+ */
+
 public class MemberDao {
 	
 	String driverClass = "oracle.jdbc.OracleDriver"; // 드라이버 클래스명
