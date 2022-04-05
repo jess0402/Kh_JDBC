@@ -3,6 +3,7 @@ package member.controller;
 import java.util.List;
 
 import member.model.service.MemberService;
+import member.model.vo.DelMember;
 import member.model.vo.Member;
 
 /**
@@ -88,6 +89,16 @@ public class MemberController {
 		}
 		
 		return result;
+	}
+
+	public List<DelMember> selectDeleteMember() {
+		List<DelMember> del_list = null;
+		try {
+			del_list = memberService.selectDeleteMember();
+		} catch(Exception e) {
+			System.err.println("[" + e.getMessage() + "] 불편을 드려 죄송합니다. 관리자에게 문의하세요.");
+		}
+		return del_list;
 	}
 	
 

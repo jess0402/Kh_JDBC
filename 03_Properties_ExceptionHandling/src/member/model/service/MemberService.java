@@ -7,6 +7,7 @@ import static common.JdbcTemplate.*;
 
 import common.JdbcTemplate;
 import member.model.dao.MemberDao;
+import member.model.vo.DelMember;
 import member.model.vo.Member;
 
 /**
@@ -129,6 +130,20 @@ public class MemberService {
 			close(conn);			
 		}
 		return result;
+	}
+
+	public List<DelMember> selectDeleteMember() {
+		
+		//1. Connection 객체 생성
+		Connection conn = getConnection();
+		
+		// 2. dao 실행
+		List<DelMember> del_list = memberDao.selectDeleteMember(conn);
+		
+		// 3.자원 반납
+		close(conn);
+		
+		return del_list;
 	}
 	
 //	public int insertMember(Member member) {

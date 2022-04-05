@@ -13,6 +13,7 @@ import java.util.Properties;
 import static common.JdbcTemplate.*;
 
 import member.model.exception.MemberException;
+import member.model.vo.DelMember;
 import member.model.vo.Member;
 
 public class MemberDao {
@@ -214,6 +215,42 @@ public class MemberDao {
 		}
 		
 		return result;
+	}
+
+	public List<DelMember> selectDeleteMember(Connection conn) {
+		
+		String sql = prop.getProperty("selectDeleteMember");
+		List<DelMember> del_list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		try {
+			// 1. PreparedStatement 객체 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 2. 실행
+			rset = pstmt.executeQuery();			
+
+			// 3. ResultSet 처리
+			while(rset.next()) {
+				DelMember del_member = new DelMember();
+				del_member.setId(rset.getString("id"));
+				del_member.setName(rset.getString("name"));
+				del_member.setGender(rset.getString("gender"));
+				del_member.setBirthday(rset.getDate("birthday"));
+				del_member.setEmail(rset.getString("email"));
+				del_member.setAddress(rset.getString("address"));
+				del_member.setRegDate(rset.getTimestamp("reg_date"));
+				del_member.setDelDate(rset.getDate("del_date"));
+				
+				del_list.add(del_member);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return del_list;
 	}
 
 }

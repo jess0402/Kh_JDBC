@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import member.controller.MemberController;
+import member.model.vo.DelMember;
 import member.model.vo.Member;
 
 /**
@@ -25,6 +26,7 @@ public class MemberMenu {
                 	+ "4. 회원 가입\n"
                 	+ "5. 회원 정보 변경\n"
                 	+ "6. 회원 탈퇴\n"
+                	+ "7. 탈퇴 회원 조회\n"
                 	+ "0. 프로그램 종료\n"
                 	+ "------------------\n"
                 	+ "선택 : ";
@@ -36,6 +38,7 @@ public class MemberMenu {
 			int result = 0;
 			String name = null;
 			List<Member> list = null;
+			List<DelMember> del_list = null;
 			String id = null;
 			
 			switch(choice) {
@@ -66,13 +69,17 @@ public class MemberMenu {
 				result = memberController.deleteMember(id);
 				printResultMsg(result, "회원 삭제 성공!", "회원 삭제 실패!");
 				break;
+			case "7" :
+				del_list = memberController.selectDeleteMember();
+				printDelMemberList(del_list);
+				break;
 			case "0" : return;
 			default : 
 				System.out.println("잘못 입력하셨습니다.");
 			}
 		}
 	}
-		
+
 	/**
 	 * 회원정보 수정 메뉴 
 	 * 1. 수정메뉴 보이기전에 입력한 사용자 id에 해당하는 정보를 조회/출력
@@ -184,8 +191,6 @@ public class MemberMenu {
 		
 	}
 
-
-
 	/**
      * 여러행 조회결과 출력 메소드
      * (list가 null인 경우 없음)
@@ -217,6 +222,34 @@ public class MemberMenu {
             System.out.println();
         }
     }
+    
+    
+	private void printDelMemberList(List<DelMember> del_list) {
+        if(del_list == null || del_list.isEmpty()) {
+            System.out.println("> 조회된 행이 없습니다.");
+        }
+        else {
+            System.out.println("> 조회결과");
+            System.out.println("=====================================================");
+            System.out.printf("%15s%15s%15s%15s%15s%15s%15s%n", 
+                                "id", "name", "gender", "birthday", "email", "address", "regDate");
+            System.out.println("-----------------------------------------------------");
+            for(DelMember member : del_list) {
+                System.out.printf("%15s%15s%15s%15s%15s%15s%15s%15s%n", 
+                        member.getId(), 
+                        member.getName(),
+                        member.getGender(),
+                        member.getBirthday(),
+                        member.getEmail(),
+                        member.getAddress(),
+                        member.getRegDate(),
+                        member.getDelDate());
+            }
+            System.out.println("-----------------------------------------------------");
+            System.out.println();
+        }
+		
+	}
 
 	/**
 	 * 조회할 회원명 입력메서드
@@ -233,11 +266,27 @@ public class MemberMenu {
 	 * @return
 	 */
 	private Member inputMember() {
+		
+		String id = null;
 		Member member = new Member();
 		
 		System.out.println("> 신규회원정보를 입력하세요. <");
-		System.out.print("아이디: ");	
-		member.setId(sc.next());
+		while(true) {
+			System.out.print("아이디: ");	
+			id = sc.next();
+			boolean yn = checkId(id);
+			if(yn == true) {
+				System.out.println("> 사용가능한 아이디입니다 :)");
+				member.setId(id);
+				break;
+			}
+			else {
+				System.out.println("> 사용불가능한 아이디입니다. 다시 입력하세요.");
+				continue;
+			}
+			
+		}
+		
 		System.out.print("이름: ");
 		member.setName(sc.next());
 		System.out.print("성별(M/F): ");
@@ -262,6 +311,15 @@ public class MemberMenu {
 		member.setAddress(sc.nextLine());
 		
 		return member;
+	}
+
+	private boolean checkId(String id) {
+		Member member = null;
+		member = memberController.selectOne(id);
+		if(member == null)
+			return true;
+		else
+			return false;			
 	}
 
 	/**
